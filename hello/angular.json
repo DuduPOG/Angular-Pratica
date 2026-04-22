@@ -2,7 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": false
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -67,8 +68,11 @@
               "buildTarget": "hello:build:production"
             },
             "development": {
-              "buildTarget": "hello:build:development"
+              "buildTarget": "hello:build:development",
+              "allowedHosts": ["silver-space-guide-x5vj6q669vwrcv7w6-4200.app.github.dev", "localhost","127.0.0.1"]
             }
+          },
+          "defaultConfiguration": "development"
           },
           "defaultConfiguration": "development"
         },
@@ -77,5 +81,4 @@
         }
       }
     }
-  }
 }

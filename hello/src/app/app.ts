@@ -1,12 +1,32 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
+  imports: [RouterOutlet, FormsModule, CommonModule, ButtonModule],
+  template: `   <main class="main">
+    <h1 class="text-center"> {{ title }} </h1>
+    <input [(ngModel)] = "name"/>
+    <p> Hello, {{ name }} </p>
+    <p-button [disabled] = "isButtonDisabled" (onclieck)="handleclick()"> Click Here </p-button>
+    @if (isButtonDisabled) {
+      <p>The button is disabled!</p>
+    }
+    @else {
+      <p>The button is enabled!</p>
+    }
+    <router-outlet></router-outlet>
+  </main>`,
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('hello');
+  isButtonDisabled = true;
+  protected readonly title = 'O Guardiorla vem aí';
+  name = "Pedro";
+  handleclick() {
+    window.alert("Vasco é o maior que já existiu")
+  }
 }
