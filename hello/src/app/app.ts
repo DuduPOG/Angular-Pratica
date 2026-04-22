@@ -15,23 +15,23 @@ import { CardModule } from 'primeng/card';
   imports: [RouterOutlet, FormsModule, CommonModule, FloatLabelModule, InputTextModule, ButtonModule, CardModule],
   template: ` <main class="text-center m-auto">
     <h1 class="text-center"> {{ titulo }} </h1>
-    
+
     <div class="card flex flex-wrap justify-center items-end gap-4 mt-4">
-            
+
             <p-floatlabel variant="on">
                 <input pInputText id="on_label" [(ngModel)]="name" autocomplete="off" />
                 <label for="on_label">Nome da Lenda</label>
             </p-floatlabel>
         </div>
     <div class="card flex flex-wrap justify-center items-end gap-4 mt-4">
-            
+
             <p-floatlabel variant="on">
                 <input pInputText id="on_labell" [(ngModel)]="textoescrito" autocomplete="off" />
                 <label for="on_labell">Texto da Lenda</label>
             </p-floatlabel>
     </div>
     <div class="card flex flex-wrap justify-center items-end gap-4 mt-4">
-            
+
             <p-floatlabel variant="on">
                 <input pInputText id="on_labell" [(ngModel)]="foto" autocomplete="off" />
                 <label for="on_labell">Foto da Lenda</label>
@@ -40,7 +40,7 @@ import { CardModule } from 'primeng/card';
     <div class="card flex justify-center mt-4">
             <p-button label="Clica aí" (onClick)="handleclick()" />
     </div>
-    
+
 
     <div class="mb-4 p-8 flex items-center justify-center">
         <p-card [style]="{ width: '25rem', overflow: 'hidden' }">
