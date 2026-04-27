@@ -11,7 +11,7 @@ import { ButtonModule } from 'primeng/button';
     <h1 class="text-center"> {{ title }} </h1>
     <input [(ngModel)] = "name"/>
     <p> Hello, {{ name }} </p>
-    <p-button [disabled] = "isButtonDisabled" (onclieck)="handleclick()"> Click Here </p-button>
+    <p-button class="bg-red" [disabled] = "isButtonDisabled" (onclieck)="handleclick()"> Click Here </p-button>
     @if (isButtonDisabled) {
       <p>The button is disabled!</p>
     }
