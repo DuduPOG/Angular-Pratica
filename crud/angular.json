@@ -25,7 +25,9 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": [
+              "src/styles.css"
+            ],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
@@ -67,17 +69,13 @@
             },
             "development": {
               "buildTarget": "crud:build:development",
-              "allowedHosts": [
-                "silver-space-guide-x5vj6q669vwrcv7w6-4200.app.github.dev",
-                "localhost",
-                "127.0.0.1"
-              ]
+              "allowedHosts": ["silver-space-guide-x5vj6q669vwrcv7w6-4200.app.github.dev", "localhost","127.0.0.1"]
             }
           },
           "defaultConfiguration": "development"
-        },
-        "defaultConfiguration": "development"
+          },
+          "defaultConfiguration": "development"
+        }
       }
     }
-  }
 }
