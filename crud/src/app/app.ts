@@ -6,16 +6,19 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { CheckboxModule, Checkbox } from 'primeng/checkbox';
 
 
 interface ItemCrud {
   nome: string;
   descricao: string;
   foto: string;
+  trabalho: boolean;
+  nota: string;
 }
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FormsModule, CommonModule, FloatLabelModule, InputTextModule, ButtonModule, CardModule],
+  imports: [RouterOutlet, FormsModule, CommonModule, FloatLabelModule, InputTextModule, ButtonModule, CardModule, Checkbox],
   template: ` <main class="text-center m-auto">
     <h1 class="text-center"> {{ titulo }} </h1>
 
@@ -25,7 +28,7 @@ interface ItemCrud {
                 <input #nomeInput id="nomeInput" pInputText class="on_label" [(ngModel)]="name" autocomplete="off" />
                 <label for="on_label">Nome</label>
             </p-floatlabel>
-        </div>
+    </div>
     <div class="card flex flex-wrap justify-center items-end gap-4 mt-4">
 
             <p-floatlabel variant="on">
@@ -33,11 +36,25 @@ interface ItemCrud {
                 <label for="on_label">Descrição</label>
             </p-floatlabel>
     </div>
+
     <div class="card flex flex-wrap justify-center items-end gap-4 mt-4">
 
             <p-floatlabel variant="on">
                 <input pInputText class="on_label" [(ngModel)]="foto" autocomplete="off" />
                 <label for="on_label">Foto qualquer</label>
+            </p-floatlabel>
+    </div>
+    <div class="card flex flex-wrap justify-center items-end gap-4 mt-4">
+      <div class="card flex justify-center gap-4">
+        <p>Foi trabalhoso fazer esse crud? </p>
+        <p-checkbox [(ngModel)]="trabalho" [binary]="true" />
+      </div>
+  </div>
+  <div class="card flex flex-wrap justify-center items-end gap-4 mt-4">
+
+            <p-floatlabel variant="on">
+                <input pInputText class="on_label" [(ngModel)]="nota" autocomplete="off" />
+                <label for="on_label">Nota para seu crud</label>
             </p-floatlabel>
     </div>
     <div class="card flex justify-center mt-4">
@@ -64,6 +81,22 @@ interface ItemCrud {
 
         <p>
           {{ item.descricao }}
+        </p>
+
+        <p>
+          Foi trabalhoso fazer esse crud?
+        </p>
+
+        <p>
+          {{ item.trabalho }}
+        </p>
+
+        <p>
+          Nota do seu crud:
+        </p>
+
+        <p>
+          {{ item.nota }}
         </p>
 
         <ng-template pTemplate="footer">
@@ -99,6 +132,8 @@ export class App {
   foto = '';
   imagemPadrao =
   'https://static.wikia.nocookie.net/naruto/images/4/43/Mangeky%C3%B4_Sharingan_Shisui.svg/revision/latest?cb=20140503184904&path-prefix=fr';
+  trabalho = false;
+  nota = '0';
 
   editandoIndex: number | null = null;
 
@@ -112,7 +147,9 @@ export class App {
     const objeto: ItemCrud = {
       nome: this.name,
       descricao: this.textoescrito,
-      foto: this.foto || this.imagemPadrao
+      foto: this.foto || this.imagemPadrao,
+      trabalho: this.trabalho,
+      nota: this.nota
     };
 
     if (this.editandoIndex !== null) {
@@ -131,6 +168,8 @@ export class App {
     this.name = item.nome;
     this.textoescrito = item.descricao;
     this.foto = item.foto;
+    this.trabalho = item.trabalho;
+    this.nota = item.nota;
 
     this.editandoIndex = index;
 
@@ -145,6 +184,8 @@ export class App {
     this.name = '';
     this.textoescrito = '';
     this.foto = '';
+    this.trabalho = false;
+    this.nota = '0';
   }
 
   excluir(index: number) {
