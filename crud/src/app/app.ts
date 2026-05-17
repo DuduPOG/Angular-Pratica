@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, signal } from '@angular/core';
+import { Component, ViewChild, ElementRef, signal, computed } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {form, FormField, minLength, required} from '@angular/forms/signals';
@@ -24,11 +24,20 @@ interface ItemCrud {
   template: ` <main class="text-center m-auto">
     <h1 class="text-center"> {{ titulo }} </h1>
 
+    <form (submit)="handleclick($event)">
     <div class="card flex flex-wrap justify-center items-end gap-4 mt-4">
 
             <p-floatlabel variant="on">
-                <input #nomeInput id="nomeInput" pInputText class="on_label" [formField]="crudForm.nome" autocomplete="off" />
+                <input #nomeInput id="nomeInput" type="InputTextModule" pInputText class="on_label" [formField]="crudForm.nome" autocomplete="off" />
                 <label for="on_label">Nome</label>
+                    @if (crudForm.nome().invalid()) {
+                      <p class="error">O campo "nome" tem erros de validação:</p>
+                      <ul>
+                        @for (error of crudForm.nome().errors(); track error) {
+                          <li>{{ error.message }}</li>
+                        }
+                      </ul>
+                    }
             </p-floatlabel>
     </div>
     <div class="card flex flex-wrap justify-center items-end gap-4 mt-4">
@@ -36,6 +45,14 @@ interface ItemCrud {
             <p-floatlabel variant="on">
                 <input pInputText class="on_label" [formField]="crudForm.descricao" autocomplete="off" />
                 <label for="on_label">Descrição</label>
+                @if (crudForm.descricao().invalid()) {
+                  <p class="error">O campo "descrição" tem erros de validação:</p>
+                  <ul>
+                    @for (error of crudForm.nome().errors(); track error) {
+                      <li>{{ error.message }}</li>
+                    }
+                  </ul>
+                }
             </p-floatlabel>
     </div>
 
@@ -57,11 +74,20 @@ interface ItemCrud {
             <p-floatlabel variant="on">
                 <input pInputText class="on_label" [formField]="crudForm.nota" autocomplete="off" />
                 <label for="on_label">Nota para seu crud</label>
+                @if (crudForm.nome().invalid()) {
+                  <p class="error">O campo "nota" tem erros de validação:</p>
+                  <ul>
+                    @for (error of crudForm.nota().errors(); track error) {
+                      <li>{{ error.message }}</li>
+                    }
+                  </ul>
+                }
             </p-floatlabel>
     </div>
     <div class="card flex justify-center mt-4">
-            <p-button label="Salvar" (onClick)="handleclick()" />
+      <p-button type="submit" [disabled]="!isFormValid()" label="Salvar" (onClick)="handleclick($event)" />
     </div>
+    </form>
 
 
     <div class="flex flex-wrap justify-center gap-6 mt-8">
@@ -138,17 +164,30 @@ export class App {
     nota: '0'
   });
 
-  crudForm = form(this.crudModel);
+  crudForm = form(this.crudModel, (schemaPath) => {
+    required(schemaPath.nome, {message: 'Nome deve ser preenchido'});
+    required(schemaPath.descricao, {message: 'Descrição deve ser preenchida'});
+    required(schemaPath.nota, {message: 'Nota deve ser preenchida'});
+  });
+
+  isFormValid = computed(() =>
+    !this.crudForm.nome().invalid() &&
+    !this.crudForm.descricao().invalid() &&
+    !this.crudForm.nota().invalid()
+  );
 
   editandoIndex: number | null = null;
 
   listaObjetos: ItemCrud[] = [];
 
-  handleclick() {
+  handleclick(e: Event) {
+    e.preventDefault();
     if (!this.crudForm.nome().value().trim() || !this.crudForm.descricao().value().trim()) {
       return;
     }
-
+    if (!this.isFormValid()) {
+      return;
+    }
     const objeto: ItemCrud = {
       nome: this.crudForm.nome().value(),
       descricao: this.crudForm.descricao().value(),
