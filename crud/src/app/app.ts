@@ -85,7 +85,7 @@ interface ItemCrud {
             </p-floatlabel>
     </div>
     <div class="card flex justify-center mt-4">
-      <p-button type="submit" [disabled]="crudForm().invalid" label="Salvar" (onClick)="handleclick($event)" />
+      <p-button type="submit" [disabled]="crudForm().invalid()" label="Salvar" (onClick)="handleclick($event)" />
     </div>
     </form>
 
