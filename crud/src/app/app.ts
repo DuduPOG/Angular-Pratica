@@ -74,7 +74,7 @@ interface ItemCrud {
             <p-floatlabel variant="on">
                 <input pInputText class="on_label" [formField]="crudForm.nota" autocomplete="off" />
                 <label for="on_label">Nota para seu crud</label>
-                @if (crudForm.nome().invalid()) {
+                @if (crudForm.nota().invalid()) {
                   <p class="error">O campo "nota" tem erros de validação:</p>
                   <ul>
                     @for (error of crudForm.nota().errors(); track error) {
@@ -85,7 +85,7 @@ interface ItemCrud {
             </p-floatlabel>
     </div>
     <div class="card flex justify-center mt-4">
-      <p-button type="submit" [disabled]="!isFormValid()" label="Salvar" (onClick)="handleclick($event)" />
+      <p-button type="submit" [disabled]="crudForm().invalid" label="Salvar" (onClick)="handleclick($event)" />
     </div>
     </form>
 
@@ -170,12 +170,6 @@ export class App {
     required(schemaPath.nota, {message: 'Nota deve ser preenchida'});
   });
 
-  isFormValid = computed(() =>
-    !this.crudForm.nome().invalid() &&
-    !this.crudForm.descricao().invalid() &&
-    !this.crudForm.nota().invalid()
-  );
-
   editandoIndex: number | null = null;
 
   listaObjetos: ItemCrud[] = [];
@@ -183,9 +177,6 @@ export class App {
   handleclick(e: Event) {
     e.preventDefault();
     if (!this.crudForm.nome().value().trim() || !this.crudForm.descricao().value().trim()) {
-      return;
-    }
-    if (!this.isFormValid()) {
       return;
     }
     const objeto: ItemCrud = {
