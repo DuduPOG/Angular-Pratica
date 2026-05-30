@@ -1,156 +1,141 @@
-import { Component, signal} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import {form, FormField, required} from '@angular/forms/signals';
+import { Component, signal, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
+import { RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { Checkbox } from 'primeng/checkbox';
-import { CrudForm } from './crud-form/crud-form';
+import { DialogModule } from 'primeng/dialog';
 
-export interface ItemCrud {
-  nome: string;
-  descricao: string;
-  imagemPadrao: string;
-  foto: string;
-  trabalho: boolean;
-  nota: string;
-}
+import { CrudService } from './services/crud.service';
+import { CrudFormComponent } from './crud-form/crud-form.component';
+import { CrudTableComponent } from './crud-table/crud-table.component';
+import { CrudDetailComponent } from './crud-detail/crud-detail.component';
+import { ItemCrud, DEFAULT_ITEM_CRUD } from './models/item-crud.model';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FormsModule, CommonModule, FloatLabelModule, InputTextModule, ButtonModule, CardModule, Checkbox, FormField, CrudForm],
-  template: ` <main class="text-center m-auto">
-    <h1 class="text-center"> {{ titulo }} </h1>
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    FormsModule,
+    CommonModule,
+    ButtonModule,
+    CardModule,
+    DialogModule,
+    CrudFormComponent,
+    CrudTableComponent,
+    CrudDetailComponent
+  ],
+  template: `
+    <main class="max-w-7xl mx-auto px-4 py-8">
+      <!-- Cabeçalho -->
+      <div class="mb-8">
+        <h1 class="text-4xl font-bold text-center text-gray-800">{{ titulo }}</h1>
+        <p class="text-center text-gray-600 mt-2">Gerencie seus itens CRUD com facilidade</p>
+      </div>
 
-  <form (submit)="handleclick($event)">
-    <app-crud-form [crudForm]="crudForm" ></app-crud-form>
-    <div class="card flex justify-center mt-4">
-      <p-button type="submit" [disabled]="crudForm().invalid()" label="Salvar" (onClick)="handleclick($event)" />
-    </div>
-  </form>
-    <div class="flex flex-wrap justify-center gap-6 mt-8">
-      <p-card
-        *ngFor="let item of listaObjetos; let i = index"
-        [style]="{ width: '25rem', overflow: 'hidden' }"
-      >
-        <ng-template pTemplate="header">
-          <img alt="Card" class="w-full" [src]="item.foto" />
-        </ng-template>
+      <!-- Seção de Formulário -->
+      <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+          {{ crudService.getEditingIndex() !== null ? 'Editando Item' : 'Adicionar Novo Item' }}
+        </h2>
 
-        <ng-template pTemplate="title">
-          {{ item.nome }}
-        </ng-template>
+        <app-crud-form
+          #crudForm
+          [initialData]="editingItem()"
+          (formSubmitted)="handleFormSubmit($event)"
+        />
 
-        <ng-template pTemplate="subtitle">
-          Descrição
-        </ng-template>
+        <div class="flex gap-4 mt-6">
+          <p-button
+            label="Salvar"
+            icon="pi pi-check"
+            (onClick)="submitForm()"
+            [disabled]="isSaveDisabled()"
+            class="flex-1"
+          />
+          <p-button
+            label="Cancelar"
+            icon="pi pi-times"
+            severity="secondary"
+            (onClick)="resetForm()"
+            class="flex-1"
+            [outlined]="true"
+          />
+        </div>
+      </div>
 
-        <p>
-          {{ item.descricao }}
-        </p>
+      <!-- Seção de Tabela -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Lista de Itens</h2>
+        @let items = crudService.items$();
+        <app-crud-table
+          [items]="items"
+          (onEdit)="handleEdit($event)"
+          (onDelete)="handleDelete($event)"
+          (onDetail)="handleDetail($event)"
+        />
+      </div>
 
-        <p>
-          Foi trabalhoso fazer esse crud?
-        </p>
+      <!-- Modal de Detalhes -->
+      @let selectedItem = crudService.selectedItem$();
+      @if (selectedItem) {
+        <app-crud-detail
+          [item]="selectedItem"
+          (onClose)="handleDetailClose()"
+        />
+      }
 
-        <p>
-          {{ item.trabalho }}
-        </p>
-
-        <p>
-          Nota do seu crud:
-        </p>
-
-        <p>
-          {{ item.nota }}
-        </p>
-
-        <ng-template pTemplate="footer">
-          <div class="flex gap-4 mt-1">
-            <p-button
-              label="Editar"
-              (onClick)="editar(i)"
-              severity="secondary"
-              class="w-full"
-              [outlined]="true"
-              styleClass="w-full"
-              />
-            <p-button
-              label="Excluir"
-              (onClick)="excluir(i)"
-              class="w-full"
-              styleClass="w-full"
-            />
-          </div>
-        </ng-template>
-      </p-card>
-    </div>
-    <router-outlet></router-outlet>
-  </main>`,
+      <!-- Outlet para roteamento -->
+      <router-outlet></router-outlet>
+    </main>
+  `,
   styleUrl: './app.css'
 })
 
 export class App {
-  titulo = 'Projeto de CRUD';
+  titulo = 'Projeto de CRUD - Angular 21 + PrimeNG 21 + Tailwind';
 
-  crudModel = signal<ItemCrud>({
-    nome: '',
-    descricao: '',
-    imagemPadrao: 'https://static.wikia.nocookie.net/naruto/images/4/43/Mangeky%C3%B4_Sharingan_Shisui.svg/revision/latest?cb=20140503184904&path-prefix=fr',
-    foto: '',
-    trabalho: false,
-    nota: '0'
-  });
+  @ViewChild('crudForm') crudForm!: CrudFormComponent;
 
-  crudForm = form(this.crudModel, (schemaPath) => {
-    required(schemaPath.nome, {message: 'Nome deve ser preenchido'});
-    required(schemaPath.descricao, {message: 'Descrição deve ser preenchida'});
-    required(schemaPath.nota, {message: 'Nota deve ser preenchida'});
-  });
+  editingItem = signal<ItemCrud>(DEFAULT_ITEM_CRUD);
+  isSaveDisabled = signal(false);
 
-  editandoIndex: number | null = null;
-
-  listaObjetos: ItemCrud[] = [];
-
-  handleclick(e: Event) {
-    e.preventDefault();
-    if (!this.crudForm.nome().value().trim() || !this.crudForm.descricao().value().trim()) {
-      return;
-    }
-    const objeto: ItemCrud = {
-      nome: this.crudForm.nome().value(),
-      descricao: this.crudForm.descricao().value(),
-      imagemPadrao: 'https://static.wikia.nocookie.net/naruto/images/4/43/Mangeky%C3%B4_Sharingan_Shisui.svg/revision/latest?cb=20140503184904&path-prefix=fr',
-      foto: this.crudForm.foto().value() || this.crudForm.imagemPadrao().value(),
-      trabalho: this.crudForm.trabalho().value(),
-      nota: this.crudForm.nota().value()
-    };
-
-    if (this.editandoIndex !== null) {
-      this.listaObjetos[this.editandoIndex] = objeto;
-      this.editandoIndex = null;
-    } else {
-      this.listaObjetos.push(objeto);
-    }
-
-    this.resetarInputs();
+  constructor(public crudService: CrudService) {
+    // Efeito para carregar item em edição
+    effect(() => {
+      const editIndex = this.crudService.getEditingIndex();
+      if (editIndex !== null) {
+        const item = this.crudService.getItemByIndex(editIndex);
+        if (item) {
+          this.editingItem.set(item);
+        }
+      } else {
+        this.editingItem.set(DEFAULT_ITEM_CRUD);
+      }
+    });
   }
 
-  editar(index: number) {
-    const item = this.listaObjetos[index];
-    this.crudModel.set({
-      nome: item.nome,
-      descricao: item.descricao,
-      imagemPadrao: item.imagemPadrao,
-      foto: item.foto,
-      trabalho: item.trabalho,
-      nota: item.nota
-    });
+  handleFormSubmit(item: ItemCrud): void {
+    this.crudService.addItem(item);
+    this.resetForm();
+  }
 
-    this.editandoIndex = index;
+  submitForm(): void {
+    if (this.crudForm) {
+      this.crudForm.submit();
+    }
+  }
 
+  resetForm(): void {
+    this.crudService.setEditingItem(null);
+    this.editingItem.set(DEFAULT_ITEM_CRUD);
+    if (this.crudForm) {
+      this.crudForm.reset();
+    }
+  }
+
+  handleEdit(index: number): void {
+    this.crudService.setEditingItem(index);
     setTimeout(() => {
       const input = document.getElementById('nomeInput') as HTMLInputElement;
       input?.focus();
@@ -158,23 +143,17 @@ export class App {
     }, 0);
   }
 
-  resetarInputs() {
-    this.crudModel.set({
-      nome: '',
-      descricao: '',
-      imagemPadrao: 'https://static.wikia.nocookie.net/naruto/images/4/43/Mangeky%C3%B4_Sharingan_Shisui.svg/revision/latest?cb=20140503184904&path-prefix=fr',
-      foto: '',
-      trabalho: false,
-      nota: ''
-    });
+  handleDelete(index: number): void {
+    if (confirm('Tem certeza que deseja excluir este item?')) {
+      this.crudService.deleteItem(index);
+    }
   }
 
-  excluir(index: number) {
-    this.listaObjetos.splice(index, 1);
+  handleDetail(item: ItemCrud): void {
+    this.crudService.selectItem(item);
+  }
 
-    if (this.editandoIndex === index) {
-      this.editandoIndex = null;
-      this.resetarInputs();
-    }
+  handleDetailClose(): void {
+    this.crudService.selectItem(null);
   }
 }
