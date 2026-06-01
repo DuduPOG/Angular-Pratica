@@ -10,10 +10,10 @@ export interface ItemCrud {
 export const DEFAULT_ITEM_CRUD: ItemCrud = {
   nome: '',
   descricao: '',
-  imagemPadrao: 'https://static.wikia.nocookie.net/naruto/images/4/43/Mangekyō_Sharingan_Shisui.svg/revision/latest?cb=20140503184904&path-prefix=fr',
+  imagemPadrao: 'https://static.wikia.nocookie.net/naruto/images/c/cf/S%C3%ADmbolo_MS_Shisui.svg/revision/latest?cb=20121117225358&path-prefix=pt-br',
   foto: '',
   trabalho: false,
   nota: ''
 };
 
-export const DEFAULT_IMAGE = 'https://static.wikia.nocookie.net/naruto/images/4/43/Mangekyō_Sharingan_Shisui.svg/revision/latest?cb=20140503184904&path-prefix=fr';
+export const DEFAULT_IMAGE = 'https://static.wikia.nocookie.net/naruto/images/c/cf/S%C3%ADmbolo_MS_Shisui.svg/revision/latest?cb=20121117225358&path-prefix=pt-br';

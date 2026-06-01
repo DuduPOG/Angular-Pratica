@@ -33,7 +33,7 @@ import { ItemCrud } from '../models/item-crud.model';
               </span>
             </td>
             <td>
-              <div class="flex gap-2">
+              <div class="flex gap-2 justify-center">
                 <p-button
                   icon="pi pi-eye"
                   [rounded]="true"
@@ -42,15 +42,17 @@ import { ItemCrud } from '../models/item-crud.model';
                   (onClick)="onDetail.emit(item)"
                   pTooltip="Detalhar"
                   tooltipPosition="top"
+                  label="Detalhar"
                 />
                 <p-button
-                  icon="pi pi-pencil"
+                  icon="pi pi-pen-to-square"
                   [rounded]="true"
                   [text]="true"
                   severity="warn"
                   (onClick)="onEdit.emit(rowIndex)"
                   pTooltip="Editar"
                   tooltipPosition="top"
+                  label="Editar"
                 />
                 <p-button
                   icon="pi pi-trash"
@@ -60,6 +62,7 @@ import { ItemCrud } from '../models/item-crud.model';
                   (onClick)="onDelete.emit(rowIndex)"
                   pTooltip="Excluir"
                   tooltipPosition="top"
+                  label="Excluir"
                 />
               </div>
             </td>
