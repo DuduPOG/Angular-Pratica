@@ -42,7 +42,7 @@ import { ItemCrud } from '../../models/item-crud.model';
           <td>
             <div class="flex gap-2 justify-center">
               <p-button
-                icon="pi pi-eye"
+                label="Detalhar"
                 [rounded]="true"
                 [text]="true"
                 severity="info"
@@ -51,7 +51,7 @@ import { ItemCrud } from '../../models/item-crud.model';
                 tooltipPosition="top"
               />
               <p-button
-                icon="pi pi-pen-to-square"
+                label="Editar"
                 [rounded]="true"
                 [text]="true"
                 severity="warn"
@@ -60,7 +60,7 @@ import { ItemCrud } from '../../models/item-crud.model';
                 tooltipPosition="top"
               />
               <p-button
-                icon="pi pi-trash"
+                label="Excluir"
                 [rounded]="true"
                 [text]="true"
                 severity="danger"

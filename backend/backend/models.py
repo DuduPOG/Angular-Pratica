@@ -8,12 +8,6 @@ DEFAULT_IMAGE = (
 
 
 class ItemCrud(models.Model):
-    """
-    Modelo central do CRUD.
-
-    Os nomes dos campos usam snake_case (convenção Django).
-    O serializer expõe os campos em camelCase para o frontend Angular.
-    """
     nome = models.CharField(max_length=255)
     descricao = models.TextField()
     imagem_padrao = models.CharField(max_length=500, default=DEFAULT_IMAGE)
@@ -27,5 +21,5 @@ class ItemCrud(models.Model):
         verbose_name = 'Item CRUD'
         verbose_name_plural = 'Itens CRUD'
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.nome
