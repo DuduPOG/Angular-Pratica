@@ -111,11 +111,11 @@ export class LoginComponent {
     this.loading.set(true);
     this.errorMsg.set('');
 
-    this.authService.signin(this.username.trim(), this.password).subscribe({
+    this.authService.login({username: this.username, password: this.password}).subscribe({
       next: () => {
         this.router.navigate(['/listagem']);
       },
-      error: err => {
+      error: (err: any) => {
         this.loading.set(false);
         const status = err?.status;
         if (status === 401 || status === 400) {

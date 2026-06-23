@@ -20,9 +20,6 @@ schema_view = get_schema_view(
     permission_classes=[AllowAny],
 )
 
-router = routers.DefaultRouter()
-router.register(r'itens', ItemCrudViewSet, basename='item')
-
 urlpatterns = [
     path('admin/', admin.site.urls),
 

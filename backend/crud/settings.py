@@ -36,6 +36,14 @@ INSTALLED_APPS = [
     'backend',
 ]
 
+SECURITY_DEFINITIONS = {
+    "Bearer": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+    }
+}
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',   # deve ser o primeiro
     'django.middleware.security.SecurityMiddleware',
