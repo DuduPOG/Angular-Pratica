@@ -112,8 +112,7 @@ export class LoginComponent {
     this.errorMsg.set('');
 
     this.authService.login({username: this.username, password: this.password}).subscribe({
-      next: (response: any) => {
-        this.authService.saveTokens(response);
+      next: () => {
         this.router.navigate(['/listagem']);
       },
       error: (err: any) => {

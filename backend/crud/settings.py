@@ -32,16 +32,25 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'drf_yasg',
     # Aplicação local
     'backend',
 ]
 
-SECURITY_DEFINITIONS = {
-    "Bearer": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header"
-    }
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': "Informe: Bearer <seu_access_token>",
+        }
+    },
+    # Sem isso, o drf-yasg tenta usar as autenticações padrão do DRF
+    # (Session/Basic) no botão Authorize, resultando no formulário de
+    # usuário/senha em vez do campo de Bearer token.
+    'USE_SESSION_AUTH': False,
+    'DEFAULT_MODEL_RENDERING': 'example',
 }
 
 MIDDLEWARE = [

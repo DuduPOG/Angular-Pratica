@@ -25,8 +25,6 @@ urlpatterns = [
 
     # ── CRUD endpoints ────────────────────────────────────────────────────────
     path('api/', include('backend.urls')),
-    path('api/signup/', ItemCrudViewSet.as_view({'post': 'signup'}), name='signup'),
-    path('api/login/', ItemCrudViewSet.as_view({'post': 'login'}), name='login'),
     path('api/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('api/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     # ── JWT auth ──────────────────────────────────────────────────────────────
