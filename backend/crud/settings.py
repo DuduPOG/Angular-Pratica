@@ -8,16 +8,13 @@ SECRET_KEY = 'django-insecure-crud-dev-key-troque-em-producao'
 
 DEBUG = True
 
-# ─── Hosts ────────────────────────────────────────────────────────────────────
-# Aceita localhost E qualquer subdomínio *.github.dev (Codespace)
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '.github.dev',          # wildcard: cobre zany-...-8000.github.dev
-    '.app.github.dev',      # variante regional do Codespace
+    '.github.dev',
+    '.app.github.dev',
 ]
 
-# Necessário para Django entender que está atrás do proxy HTTPS do Codespace
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -28,12 +25,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Terceiros
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
     'drf_yasg',
-    # Aplicação local
     'backend',
 ]
 
@@ -46,15 +41,12 @@ SWAGGER_SETTINGS = {
             'description': "Informe: Bearer <seu_access_token>",
         }
     },
-    # Sem isso, o drf-yasg tenta usar as autenticações padrão do DRF
-    # (Session/Basic) no botão Authorize, resultando no formulário de
-    # usuário/senha em vez do campo de Bearer token.
     'USE_SESSION_AUTH': False,
     'DEFAULT_MODEL_RENDERING': 'example',
 }
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',   # deve ser o primeiro
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -107,7 +99,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ─── Django REST Framework ────────────────────────────────────────────────────
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -123,7 +114,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-# ─── SimpleJWT ────────────────────────────────────────────────────────────────
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=8),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -137,8 +127,6 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
 }
 
-# ─── CORS ─────────────────────────────────────────────────────────────────────
-# Origens permitidas: dev local + Codespace Angular (porta 4200)
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
     'http://127.0.0.1:4200',
@@ -146,10 +134,8 @@ CORS_ALLOWED_ORIGINS = [
     'https://zany-space-couscous-pj99g5gww65wf9p9q-4200.app.github.dev',
 ]
 
-# Permite cookies/credenciais cross-origin (não usamos aqui, mas boa prática configurar)
 CORS_ALLOW_CREDENTIALS = True
 
-# ─── CSRF trusted origins (Codespace usa HTTPS) ───────────────────────────────
 CSRF_TRUSTED_ORIGINS = [
     'https://zany-space-couscous-pj99g5gww65wf9p9q-8000.github.dev',
     'https://zany-space-couscous-pj99g5gww65wf9p9q-8000.app.github.dev',
