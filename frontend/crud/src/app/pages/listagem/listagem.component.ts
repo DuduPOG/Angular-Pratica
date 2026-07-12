@@ -7,6 +7,7 @@ import { MessageService } from 'primeng/api';
 import { CrudTableComponent } from '../../components/crud-table/crud-table.component';
 import { ItemCrudListService } from '../../services/item-crud-list.service';
 import { ItemCrudRemoveService } from '../../services/item-crud-remove.service';
+import { AuthService } from '../../auth/auth.service';
 import { ItemCrud } from '../../models/item-crud.model';
 
 @Component({
@@ -16,6 +17,19 @@ import { ItemCrud } from '../../models/item-crud.model';
   providers: [MessageService],
   template: `
     <p-toast />
+
+    <!-- Navbar mínima com logout -->
+    <header class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm">
+      <span class="font-semibold text-gray-700 text-lg">CRUD</span>
+      <p-button
+        label="Sair"
+        icon="pi pi-sign-out"
+        severity="secondary"
+        [outlined]="true"
+        size="small"
+        (onClick)="logout()"
+      />
+    </header>
 
     <main class="max-w-7xl mx-auto px-4 py-8">
       <div class="mb-8">
@@ -55,6 +69,7 @@ export class ListagemComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly listService = inject(ItemCrudListService);
   private readonly removeService = inject(ItemCrudRemoveService);
+  private readonly authService = inject(AuthService);
   private readonly messageService = inject(MessageService);
 
   items = signal<ItemCrud[]>([]);
@@ -114,5 +129,10 @@ export class ListagemComponent implements OnInit {
 
   handleDetail(item: ItemCrud): void {
     this.router.navigate(['/detalhe', item.id]);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
